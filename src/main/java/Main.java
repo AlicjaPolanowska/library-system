@@ -19,5 +19,14 @@ public class Main {
         Card card1 = new Card(1, book_list,usr);
         System.out.println(card1.toString());
 
+        Library  biblioteka = new Library("ul Spokojna 14 23-976 Monachium", "Słoneczna Biblioteka");
+        biblioteka.addBook(bookOne);
+        biblioteka.addBook(bookTwo);
+        biblioteka.addUser(usr);
+        biblioteka.addCard(card1);
+        System.out.println(biblioteka.toString());
+        
+
+
     }
 }
