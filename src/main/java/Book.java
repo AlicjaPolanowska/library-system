@@ -55,4 +55,15 @@ public class Book {
     public void setCategory(CategoriesEnum.Categories category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "author='" + author + '\'' +
+                ", code='" + code + '\'' +
+                ", title='" + title + '\'' +
+                ", pagesCount=" + pagesCount +
+                ", category=" + category +
+                '}';
+    }
 }
