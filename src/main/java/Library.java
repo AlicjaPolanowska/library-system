@@ -1,8 +1,10 @@
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Library {
     private String address;
     private String name;
+    private int id;
     private ArrayList<Book> book_list;
     private  ArrayList<User> user_list;
     private  ArrayList<Card> card_list;
@@ -13,6 +15,33 @@ public class Library {
         this.book_list = new ArrayList<Book>();
         this.user_list = new ArrayList<User>();
         this.card_list = new ArrayList<Card>();
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Libraries(address, name) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, address);
+                preparedStatement.setString(2, name);
+
+                int inserted = preparedStatement.executeUpdate();
+
+                if (inserted != 1) {
+                    throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", inserted));
+                }
+
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (!generatedKeys.next()) {
+                        throw new IllegalStateException("Query did not return created primary key");
+                    }
+
+                    this.setId((int) generatedKeys.getLong(1));
+                    System.out.println("Generated id is = " + this.getId());
+
+                }
+            } catch (SQLException ex) {
+                throw new IllegalStateException("Could not execute query", ex);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+
     }
 
     public Library() {
@@ -26,7 +55,13 @@ public class Library {
         this.address = address;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
