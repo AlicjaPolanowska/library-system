@@ -1,6 +1,8 @@
+import java.sql.*;
 import java.util.Date;
 
 public class Book {
+    private int id;
     private String author;
     private String code;
     private String title;
@@ -18,6 +20,34 @@ public class Book {
         this.title = title;
         this.pagesCount = pagesCount;
         this.category = category;
+
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Books(author, code, title, pagesCount, category) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, author);
+                preparedStatement.setString(2, code);
+                preparedStatement.setString(3, title);
+                preparedStatement.setInt(4, pagesCount);
+                preparedStatement.setInt(5, category.ordinal());
+
+                int inserted = preparedStatement.executeUpdate();
+
+                if (inserted != 1) {
+                    throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", inserted));
+                }
+
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (!generatedKeys.next()) {
+                        throw new IllegalStateException("Query did not return created primary key");
+                    }
+
+                    System.out.println("Generated id is = " + generatedKeys.getLong(1));
+                }
+            } catch (SQLException ex) {
+                throw new IllegalStateException("Could not execute query", ex);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public String getAuthor() {
