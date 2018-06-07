@@ -10,11 +10,12 @@ public class Book {
     private CategoriesEnum.Categories category;
     private Date date_from;
     private Date date_to;
+    private Library library;
 
     public Book() {
     }
 
-    public Book(String author, String code, String title, int pagesCount, CategoriesEnum.Categories category) {
+    public Book(String author, String code, String title, int pagesCount, CategoriesEnum.Categories category,Library library) {
         this.author = author;
         this.code = code;
         this.title = title;
@@ -22,12 +23,13 @@ public class Book {
         this.category = category;
 
         try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Books(author, code, title, pagesCount, category) VALUES(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Books(author, code, title, pagesCount, category, library_id) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, author);
                 preparedStatement.setString(2, code);
                 preparedStatement.setString(3, title);
                 preparedStatement.setInt(4, pagesCount);
                 preparedStatement.setInt(5, category.ordinal());
+                preparedStatement.setInt(6, library.getId());
 
                 int inserted = preparedStatement.executeUpdate();
 
@@ -40,7 +42,8 @@ public class Book {
                         throw new IllegalStateException("Query did not return created primary key");
                     }
 
-                    System.out.println("Generated id is = " + generatedKeys.getLong(1));
+                    this.setId((int) generatedKeys.getLong(1));
+                    System.out.println("Generated id is = " + this.getId());
                 }
             } catch (SQLException ex) {
                 throw new IllegalStateException("Could not execute query", ex);
@@ -48,6 +51,8 @@ public class Book {
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
+
+        library.addBook(this);
     }
 
     public String getAuthor() {
@@ -80,6 +85,22 @@ public class Book {
 
     public void setPagesCount(int pagesCount) {
         this.pagesCount = pagesCount;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Library getLibrary() {
+        return library;
+    }
+
+    public void setLibrary(Library library) {
+        this.library = library;
     }
 
     public CategoriesEnum.Categories getCategory() {
