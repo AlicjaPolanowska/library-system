@@ -13,35 +13,16 @@ public class User {
         this.last_name = last_name;
         this.age = age;
         this.address = address;
-
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Users(first_name,last_name,age,address) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                preparedStatement.setString(1, first_name);
-                preparedStatement.setString(2, last_name);
-                preparedStatement.setInt(3, age);
-                preparedStatement.setString(4, address);
-
-                int inserted = preparedStatement.executeUpdate();
-
-                if (inserted != 1) {
-                    throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", inserted));
-                }
-
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (!generatedKeys.next()) {
-                        throw new IllegalStateException("Query did not return created primary key");
-                    }
-
-                    this.setId((int) generatedKeys.getLong(1));
-                    System.out.println("Generated id is = " + this.getId());
-                }
-            } catch (SQLException ex) {
-                throw new IllegalStateException("Could not execute query", ex);
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
     }
+
+    public User(String first_name, String last_name, int age, String address,int id) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.age = age;
+        this.address = address;
+        this.id=id;
+    }
+
 
     public User() {
 
@@ -86,6 +67,7 @@ public class User {
     public void setId(int id) {
         this.id = id;
     }
+
 
     @Override
     public String toString() {
