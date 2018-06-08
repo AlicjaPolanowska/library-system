@@ -41,32 +41,13 @@ public class Card {
 
     public Card( User user,Library library) {
         this.user = user;
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Cards(user_id,library_id) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                preparedStatement.setInt(1, user.getId());
-                preparedStatement.setInt(2, library.getId());
-                int inserted = preparedStatement.executeUpdate();
+        this.library=library;
+    }
 
-                if (inserted != 1) {
-                    throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", inserted));
-                }
-
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (!generatedKeys.next()) {
-                        throw new IllegalStateException("Query did not return created primary key");
-                    }
-
-                    this.setId((int) generatedKeys.getLong(1));
-
-                    System.out.println("Generated id is = " + this.getId());
-                }
-            } catch (SQLException ex) {
-                throw new IllegalStateException("Could not execute query", ex);
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
-
+    public Card( User user,Library library,int id) {
+        this.user = user;
+        this.library=library;
+        this.id=id;
     }
 
     public Card() {

@@ -15,42 +15,27 @@ public class Book {
     public Book() {
     }
 
-    public Book(String author, String code, String title, int pagesCount, CategoriesEnum.Categories category,Library library) {
+    public Book(String author, String code, String title, int pagesCount, CategoriesEnum.Categories category, Library library) {
         this.author = author;
         this.code = code;
         this.title = title;
         this.pagesCount = pagesCount;
         this.category = category;
-
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Books(author, code, title, pagesCount, category, library_id) VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                preparedStatement.setString(1, author);
-                preparedStatement.setString(2, code);
-                preparedStatement.setString(3, title);
-                preparedStatement.setInt(4, pagesCount);
-                preparedStatement.setInt(5, category.ordinal());
-                preparedStatement.setInt(6, library.getId());
-
-                int inserted = preparedStatement.executeUpdate();
-
-                if (inserted != 1) {
-                    throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", inserted));
-                }
-
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (!generatedKeys.next()) {
-                        throw new IllegalStateException("Query did not return created primary key");
-                    }
-
-                    this.setId((int) generatedKeys.getLong(1));
-                    System.out.println("Generated id is = " + this.getId());
-                }
-            } catch (SQLException ex) {
-                throw new IllegalStateException("Could not execute query", ex);
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
+        this.library = library;
+        library.addBook(this);
+    }
+    public Book(int id, String author,String code,String title, int pages, CategoriesEnum.Categories categories,
+                String card_id, Date dateF,Date dateT,Library lib) {
+        this.id = id;
+        this.author = author;
+        this.code = code;
+        this.title = title;
+        this.pagesCount = pagesCount;
+        this.category = category;
+        this.library = library;
+        this.date_from=dateF;
+        this.date_to=dateT;
+        this.library=lib;
 
         library.addBook(this);
     }

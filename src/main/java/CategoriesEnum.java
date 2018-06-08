@@ -1,4 +1,5 @@
 public class CategoriesEnum {
+
     public enum Categories {
         Literatura_piekna,
         Biografia,

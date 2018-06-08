@@ -15,33 +15,14 @@ public class Library {
         this.book_list = new ArrayList<Book>();
         this.user_list = new ArrayList<User>();
         this.card_list = new ArrayList<Card>();
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Libraries(address, name) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                preparedStatement.setString(1, address);
-                preparedStatement.setString(2, name);
-
-                int inserted = preparedStatement.executeUpdate();
-
-                if (inserted != 1) {
-                    throw new IllegalStateException(String.format("Should insert one row. Actually inserted: %d", inserted));
-                }
-
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (!generatedKeys.next()) {
-                        throw new IllegalStateException("Query did not return created primary key");
-                    }
-
-                    this.setId((int) generatedKeys.getLong(1));
-                    System.out.println("Generated id is = " + this.getId());
-
-                }
-            } catch (SQLException ex) {
-                throw new IllegalStateException("Could not execute query", ex);
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
-
+    }
+    public Library(String address, String name,int id) {
+        this.address = address;
+        this.name = name;
+        this.id = id;
+        this.book_list = new ArrayList<Book>();
+        this.user_list = new ArrayList<User>();
+        this.card_list = new ArrayList<Card>();
     }
 
     public Library() {

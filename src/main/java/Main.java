@@ -60,6 +60,7 @@ public class Main {
         System.out.println(bookOne.toString());
 
         User usr = new User("Marek", "Marecki", 999, "ul. Lwowska 12 15-676 Lwów");
+        User usr1 = new User("MASrcin", "Mek", 69, "ul. Lublin 12 Lwów");
         System.out.println(usr.toString());
 
         Book bookTwo = new Book("J.R.R Tolkien", "1", "Władca pierścieni", 896, CategoriesEnum.Categories.Fantastyka, biblioteka);
@@ -74,5 +75,21 @@ public class Main {
         biblioteka.addUser(usr);
         biblioteka.addCard(card1);
         System.out.println(biblioteka.toString());
+
+        Inserted.insBook(bookOne);
+        Inserted.insBook(bookTwo);
+        Inserted.insBook(bookTwo);
+
+        Inserted.insUser(usr);
+        Inserted.insUser(usr1);
+
+        Inserted.insCard(card1);
+
+        User u = Selected.getUser(2);
+        System.out.println(u.toString());
+
+        Card cardSel = Selected.getCard(1);
+        System.out.println(cardSel.toString());
+
     }
 }
