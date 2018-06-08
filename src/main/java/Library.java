@@ -1,4 +1,3 @@
-import java.sql.*;
 import java.util.ArrayList;
 
 public class Library {
@@ -6,8 +5,8 @@ public class Library {
     private String name;
     private int id;
     private ArrayList<Book> book_list;
-    private  ArrayList<User> user_list;
-    private  ArrayList<Card> card_list;
+    private ArrayList<User> user_list;
+    private ArrayList<Card> card_list;
 
     public Library(String address, String name) {
         this.address = address;
@@ -16,7 +15,8 @@ public class Library {
         this.user_list = new ArrayList<User>();
         this.card_list = new ArrayList<Card>();
     }
-    public Library(String address, String name,int id) {
+
+    public Library(String address, String name, int id) {
         this.address = address;
         this.name = name;
         this.id = id;

@@ -1,7 +1,7 @@
 import java.sql.*;
 
 public class Selected {
-    public static User getUser(int v_id){
+    public static User getUser(int v_id) {
         try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
             try (PreparedStatement statement = connection.prepareStatement("select first_name,last_name,age,address from users where id = ?;")) {
                 statement.setInt(1, v_id);
@@ -9,11 +9,11 @@ public class Selected {
                     if (!resultSet.next()) {
                         return null;
                     } else {
-                        String v_first_name= resultSet.getString(1);
-                        String v_last_name=resultSet.getString(2);
-                        int v_age=resultSet.getInt(3);
-                        String v_address=resultSet.getString(4);
-                        return new User(v_first_name,v_last_name,v_age,v_address,v_id);
+                        String v_first_name = resultSet.getString(1);
+                        String v_last_name = resultSet.getString(2);
+                        int v_age = resultSet.getInt(3);
+                        String v_address = resultSet.getString(4);
+                        return new User(v_first_name, v_last_name, v_age, v_address, v_id);
                     }
                 }
             } catch (SQLException ex) {
@@ -24,7 +24,7 @@ public class Selected {
         }
     }
 
-    public static Card getCard(int v_id){
+    public static Card getCard(int v_id) {
         try (Connection connection = DriverManager.getConnection("jdbc:h2:~/my-local", "sa", "");) {
             try (PreparedStatement statement = connection.prepareStatement("select library_id,user_id from cards where id = ?;")) {
                 statement.setInt(1, v_id);
@@ -32,12 +32,12 @@ public class Selected {
                     if (!resultSet.next()) {
                         return null;
                     } else {
-                        int v_lId= resultSet.getInt(1);
-                        int v_uId=resultSet.getInt(2);
+                        int v_lId = resultSet.getInt(1);
+                        int v_uId = resultSet.getInt(2);
 
                         User user = Selected.getUser(v_uId);
                         Library lib = Selected.getLibrary(v_lId);
-                        return new Card(user,lib,v_id);
+                        return new Card(user, lib, v_id);
                     }
                 }
             } catch (SQLException ex) {
@@ -56,10 +56,10 @@ public class Selected {
                     if (!resultSet.next()) {
                         return null;
                     } else {
-                        int vId= resultSet.getInt(1);
-                        String vAddress=resultSet.getString(2);
-                        String vName=resultSet.getString(3);
-                        return new Library(vAddress,vName,vId);
+                        int vId = resultSet.getInt(1);
+                        String vAddress = resultSet.getString(2);
+                        String vName = resultSet.getString(3);
+                        return new Library(vAddress, vName, vId);
                     }
                 }
             } catch (SQLException ex) {
@@ -68,7 +68,6 @@ public class Selected {
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
-
     }
 
     private static Book getBook(int v_Id) {
@@ -79,20 +78,20 @@ public class Selected {
                     if (!resultSet.next()) {
                         return null;
                     } else {
-                        int vId= resultSet.getInt(1);
+                        int vId = resultSet.getInt(1);
                         String vAuthor = resultSet.getString(2);
                         String vCode = resultSet.getString(3);
                         String vTitle = resultSet.getString(4);
                         int vPages = resultSet.getInt(5);
                         int vCategory = resultSet.getInt(6);
-                        String vCard_id = resultSet.getString(7);
+                        int vCard_id = resultSet.getInt(7);
                         Date vDateF = resultSet.getDate(8);
                         Date vDateT = resultSet.getDate(9);
                         int vLibId = resultSet.getInt(10);
 
                         Library lib = Selected.getLibrary(vLibId);
-                        return new Book(vId, vAuthor,vCode,vTitle,vPages, CategoriesEnum.Categories.values()[vCategory],
-                        vCard_id, vDateF, vDateT,lib);
+                        return new Book(vId, vAuthor, vCode, vTitle, vPages, CategoriesEnum.Categories.values()[vCategory],
+                                vCard_id, vDateF, vDateT, lib);
                     }
                 }
             } catch (SQLException ex) {
@@ -101,7 +100,5 @@ public class Selected {
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
-
     }
-
 }
