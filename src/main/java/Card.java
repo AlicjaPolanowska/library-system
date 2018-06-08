@@ -1,8 +1,8 @@
-import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Card {
-    private  int id;
+    private int id;
     private ArrayList<Book> book_list;
     private User user;
     private Library library;
@@ -27,8 +27,15 @@ public class Card {
         return book_list;
     }
 
-    public void setBook_list(ArrayList<Book> book_list) {
-        this.book_list = book_list;
+    public void addBook(Book book) {
+        if (this.book_list == null) {
+            this.book_list = new ArrayList<Book>();
+        }
+        this.book_list.add(book);
+        book.setDate_from(new Date());
+        Date dateTo = new Date();
+        long DAY_IN_MS = 1000 * 60 * 60 * 24;
+        book.setDate_to(new Date(dateTo.getTime() + (7 * DAY_IN_MS)));
     }
 
     public User getUser() {
@@ -39,15 +46,16 @@ public class Card {
         this.user = user;
     }
 
-    public Card( User user,Library library) {
+    public Card(User user, Library library) {
         this.user = user;
-        this.library=library;
+        this.library = library;
     }
 
-    public Card( User user,Library library,int id) {
+    public Card(User user, Library library, int id) {
         this.user = user;
-        this.library=library;
-        this.id=id;
+        this.library = library;
+        this.id = id;
+        this.book_list = new ArrayList<Book>();
     }
 
     public Card() {

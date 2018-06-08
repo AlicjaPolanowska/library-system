@@ -1,4 +1,3 @@
-import java.sql.*;
 import java.util.Date;
 
 public class Book {
@@ -11,6 +10,7 @@ public class Book {
     private Date date_from;
     private Date date_to;
     private Library library;
+    private int card_id;
 
     public Book() {
     }
@@ -24,8 +24,9 @@ public class Book {
         this.library = library;
         library.addBook(this);
     }
-    public Book(int id, String author,String code,String title, int pages, CategoriesEnum.Categories categories,
-                String card_id, Date dateF,Date dateT,Library lib) {
+
+    public Book(int id, String author, String code, String title, int pages, CategoriesEnum.Categories categories,
+                int card_id, Date dateF, Date dateT, Library lib) {
         this.id = id;
         this.author = author;
         this.code = code;
@@ -33,11 +34,20 @@ public class Book {
         this.pagesCount = pagesCount;
         this.category = category;
         this.library = library;
-        this.date_from=dateF;
-        this.date_to=dateT;
-        this.library=lib;
+        this.date_from = dateF;
+        this.date_to = dateT;
+        this.library = lib;
+        this.card_id = card_id;
 
         library.addBook(this);
+    }
+
+    public int getCard_id() {
+        return card_id;
+    }
+
+    public void setCard_id(int card_id) {
+        this.card_id = card_id;
     }
 
     public String getAuthor() {
